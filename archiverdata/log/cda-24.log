@@ -1,0 +1,8 @@
+022-10-24 09:02:50.205: Error in .Find: [Error]:400: POST http://192.168.1.100:5984/codedocuments/_find - invalid_non_neg_integer -50 is not an integer greater than or equal to zero
+022-10-24 09:02:50.205: Error in RetreiveLastDocuments:[Error]:400: POST http://192.168.1.100:5984/codedocuments/_find - invalid_non_neg_integer -50 is not an integer greater than or equal to zero
+022-10-24 09:08:30.177: Error in .Find: [Error]:400: POST http://192.168.1.100:5984/codedocuments/_find - invalid_non_neg_integer -1 is not an integer greater than or equal to zero
+022-10-24 09:08:30.177: Error in RetreiveAllDocuments:[Error]:400: POST http://192.168.1.100:5984/codedocuments/_find - invalid_non_neg_integer -1 is not an integer greater than or equal to zero
+022-10-24 09:08:48.663: Error in .Find: [Error]:400: POST http://192.168.1.100:5984/codedocuments/_find - invalid_non_neg_integer -1 is not an integer greater than or equal to zero
+022-10-24 09:08:48.663: Error in RetreiveAllDocuments:[Error]:400: POST http://192.168.1.100:5984/codedocuments/_find - invalid_non_neg_integer -1 is not an integer greater than or equal to zero
+022-10-24 09:12:02.200: Error in .Find: [Error]:400: POST http://192.168.1.100:5984/codedocuments/_find - invalid_non_neg_integer -1 is not an integer greater than or equal to zero
+022-10-24 09:12:02.200: Error in RetreiveAllDocuments:[Error]:400: POST http://192.168.1.100:5984/codedocuments/_find - invalid_non_neg_integer -1 is not an integer greater than or equal to zero

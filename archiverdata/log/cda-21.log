@@ -1,0 +1,1 @@
+021-12-21 17:33:08.44: Error in GetSession: Post "http://192.168.1.100:5984/codedocuments/_find": context deadline exceeded (Client.Timeout exceeded while awaiting headers)

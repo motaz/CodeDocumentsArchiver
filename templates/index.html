@@ -1,0 +1,101 @@
+{{ template "header" }}
+
+{{ template "subheader" .Header }}               
+           
+        
+<div class="well">
+<p id="{{.Class}}">
+{{.Message}}
+</p>
+<form method=POST>
+Search for Documents
+<input type="text" autofocus name=text value="{{.Text}}" />
+<input type=submit  name=search value="Search " class="btn-primary " />
+
+Filter section Section {{ template "selectsection" .Box }}
+<input type=submit  name=filter value="Filter " class="btn-primary " />
+
+</form>
+<p>
+<a href="#description">
+<h4>Upload</h4>
+  {{ if ( gt .PrePage 0)}}
+
+<a href="/cda?page={{.PrePage}}"> << </a>
+{{end}}
+
+
+( <b> {{.Page}} </b> )
+ 
+ {{ if ( gt .NextPage 0)}}
+
+<a href="/cda?page={{.NextPage}}"> >> </a>
+{{end}}
+
+</a>
+</p>
+<table class=tform >
+<tr><th>ID</th><th>Description</th><th>File</th><th>Section</td>
+<th>Document Date</th><th>Insertion time</th><th>Updated time</th>
+<th>User</th></tr>
+{{ range .Documents }}
+
+<tr>
+ <td>
+<a href="/cda/document?id={{.RevisionID}}">
+{{.RevisionID}}
+</a>
+
+</td>
+ <td>{{.Description}}</td>
+ <td><a href="/cda/download?id={{.RevisionID}}" target="_blank">{{.FileName}}</a></td>
+ <td>{{.SectionName}}</td>
+ <td>{{.DocumentDate.Format "2006-Jan-02"}}</td>
+ <td>{{.InsertionTime.Format "2006-Jan-02 15:04"}}
+ {{ if .IsNew}}
+     <img src="/cda/resources/images/new.png" width=40% />
+ {{end}}
+</td>
+ <td
+  {{ if .IsNewUpdated}}
+    style="background-color:#aaffdd;"
+  {{end}}
+ >{{.UpdatedTime.Format "2006-Jan-02 15:04"}}</td>
+ <td>{{.UserName}}</td>
+{{ if .Removed }}
+<td><font color=red>Removed</font></td>
+{{end}}
+
+
+</tr>
+
+{{end}}
+</table>
+<form enctype="multipart/form-data" action="/cda/" method="post" >
+      
+  <div >
+      <label for="file"><h4>Document Upload</h4>
+      </label>
+      <input class="btn btn-default" type="file" name="uploadfile" placeholder='Choose'> 
+      Section {{ template "selectsection" .Box }}
+                   
+      Document Date
+      <input type="date" name="documentdate" value="{{.Today}}" />
+        
+      <br/>Description
+      <input name=description value="{{.Key}}" size=70 id="description" />
+                        
+      <br/>
+ 
+      <input type="submit" name="upload"  value="Upload Document" 
+           class="btn btn-lg btn-primary align-right" />
+                                                                                                   
+
+  </div>
+          
+        
+</form>
+      
+</div>
+
+{{ template "footer"  }}

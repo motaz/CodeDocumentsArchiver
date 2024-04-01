@@ -1,0 +1,8 @@
+021-06-23 09:01:54.61: Error in GetUserByName: [Error]:404: POST http://localhost:5984//_find - not_found Database does not exist.
+021-06-23 09:02:03.10: Error in GetUserByName: [Error]:404: POST http://localhost:5984//_find - not_found Database does not exist.
+021-06-23 09:02:23.15: Error in GetUserByName: [Error]:404: POST http://localhost:5984//_find - not_found Database does not exist.
+021-06-23 09:05:19.08: Error in GetUserByName: [Error]:404: POST http://localhost:5984//_find - not_found Database does not exist.
+021-06-23 09:06:43.95: Error in GetUserByName: [Error]:404: POST http://192.168.1.100:5984//_find - not_found Database does not exist.
+021-06-23 09:12:28.00: Error in GetUserByName: [Error]:404: POST http://192.168.1.100:5984//_find - not_found Database does not exist.
+021-06-23 09:12:42.25: Error in GetUserByName: [Error]:404: POST http://192.168.1.100:5984//_find - not_found Database does not exist.
+021-06-23 09:12:55.69: Error in GetUserByName: [Error]:404: POST http://192.168.1.100:5984//_find - not_found Database does not exist.

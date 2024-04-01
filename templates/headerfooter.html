@@ -1,0 +1,56 @@
+{{ define "header" }}
+<!doctype html>
+<html>
+
+<head>
+    <title>Code Documents Archiver</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/cda/resources/images/icon.png" />            
+
+    <link href="/cda/resources/css/bootstrap.css" rel="stylesheet" type="text/css" />
+    <link href="/cda/resources/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="/cda/resources/css/style.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+{{end}}
+
+{{ define "subheader" }}
+    
+<div class="container">
+      
+<div style="background-color: #aaccff;">
+    <table width="100%">
+    <tr>
+    <td>
+      <a href="/cda">
+         <img src="/cda/resources/images/logo.png" />
+      </a>
+    </td>
+    <td><b><font color=green>{{.Title}}</font></b></td>
+    <td>User: <b>{{.Domain}}/{{.Username}}</b></td>
+    
+    {{ if .IsAdmin}}
+      <td>(Admin)</td>
+    {{end}}
+    {{ if .Count }}
+    <td>Documents count: <b>{{.Count}}</td>
+    {{end}}
+    <td><a href='/cda/logout'>Logout</a></td>
+    </tr>
+  </table>
+
+</div>   
+{{end}}
+
+{{ define "footer" }}
+<div style="background-color: #aaccff;" align=right>
+<font size=2 >Copyright Code 2020 2023 <a href="http://code.sd" target="_blank">
+<img src="/cda/resources/images/code2.png"  width=60px ></a></font>
+<br/>
+</div>
+</body>
+</html>
+{{end}}

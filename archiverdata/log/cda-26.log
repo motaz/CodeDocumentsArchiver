@@ -1,0 +1,5 @@
+021-08-26 13:06:44.12: Error in GetUserByName: [Error]:404: POST http://localhost:5984//_find - not_found Database does not exist.
+021-08-26 13:07:53.66: Error in GetUserByName: [Error]:404: POST http://localhost:5984//_find - not_found Database does not exist.
+021-08-26 13:07:53.67: Error in FilterBySection[Error]:404: POST http://localhost:5984//_find - not_found Database does not exist.
+021-08-26 13:08:16.63: Error in FilterBySection[Error]:400: POST http://192.168.1.100:5984/testingdocs/_find - invalid_selector_json Selector must be a JSON object, not: null
+021-08-26 13:08:39.18: Error in FilterBySection[Error]:400: POST http://192.168.1.100:5984/testingdocs/_find - no_usable_index No index exists for this sort, try indexing by the sort fields.

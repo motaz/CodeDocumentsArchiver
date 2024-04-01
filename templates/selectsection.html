@@ -1,0 +1,18 @@
+{{ define "selectsection" }}
+  <select name=sectionid>
+  <option value=-1>--</option>
+  {{$selectedid := .SelectedID}}
+
+  {{ range .Sections }}
+  <option value={{.SectionID}} 
+ {{ if (eq $selectedid .SectionID)}}
+  selected
+  {{end}}
+  >
+  {{.SectionName}} </option>
+  {{end}}
+  </select>
+  
+
+{{end}}
+

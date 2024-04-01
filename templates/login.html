@@ -1,0 +1,27 @@
+{{ template "header"  }}
+
+<div class='well'>
+<h3>Code Documents Archiver</h3>
+<form method=POST>
+<table>
+<tr><td>Domain</td><td><select name=authdomain>
+
+{{ $authdomain := .AuthDomain}}
+{{$authdomain}}
+{{ range .AuthDomains}}
+<option value= "{{.}}"
+  {{ if (eq $authdomain . ) }} selected {{end}}
+  
+>{{.}}</option>
+{{end}}
+</select>
+</td></tr>
+<tr><td>Login</td><td><input type=text name=username id=login value="{{.Username}}" autofocus /> </td></tr>
+<tr><td>Password</td><td><input type=password name=password /> </td></tr>
+<tr><td><input type='checkbox' name='remember' value='1' /></td>
+<td>Keep Login</td></tr>
+<tr><td><br/></td></tr>
+<tr><td><input type=submit name=submitlogin value=Login class=button /></td></tr></table>
+</form></div>
+
+{{ template "footer"  }}

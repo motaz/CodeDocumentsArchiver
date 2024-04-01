@@ -1,0 +1,40 @@
+022-08-11 06:25:38.360: Error in database connection Error 1045: Access denied for user ''@'localhost' (using password: YES)
+022-08-11 06:25:43.755: Error in database connection Error 1045: Access denied for user ''@'localhost' (using password: YES)
+022-08-11 06:25:53.133: Error in database connection Error 1045: Access denied for user ''@'localhost' (using password: YES)
+022-08-11 06:26:05.486: Error in database connection Error 1045: Access denied for user ''@'localhost' (using password: YES)
+022-08-11 06:26:22.567: Connected to database: cda
+022-08-11 06:26:22.568: Error in GetMySQLLastDocuments scan: sql: expected 9 destination arguments in Scan, not 8
+022-08-11 06:26:22.568: Error in GetMySQLLastDocuments scan: sql: expected 9 destination arguments in Scan, not 8
+022-08-11 06:26:22.568: Error in GetMySQLLastDocuments scan: sql: expected 9 destination arguments in Scan, not 8
+022-08-11 06:26:22.568: Error in GetMySQLLastDocuments scan: sql: expected 9 destination arguments in Scan, not 8
+022-08-11 06:26:22.568: Error in GetMySQLLastDocuments scan: sql: expected 9 destination arguments in Scan, not 8
+022-08-11 06:26:22.568: Error in GetMySQLLastDocuments scan: sql: expected 9 destination arguments in Scan, not 8
+022-08-11 06:26:22.568: Error in GetMySQLLastDocuments scan: sql: expected 9 destination arguments in Scan, not 8
+022-08-11 06:26:22.568: Error in GetMySQLLastDocuments scan: sql: expected 9 destination arguments in Scan, not 8
+022-08-11 06:26:22.568: Error in GetMySQLLastDocuments scan: sql: expected 9 destination arguments in Scan, not 8
+022-08-11 06:26:22.568: Error in GetMySQLLastDocuments scan: sql: expected 9 destination arguments in Scan, not 8
+022-08-11 06:26:22.569: Connected to database: cda
+022-08-11 06:27:07.606: Connected to database: cda
+022-08-11 06:27:07.607: Error in GetMySQLLastDocuments scan: sql: Scan error on column index 8, name "description": converting NULL to string is unsupported
+022-08-11 06:27:07.607: Error in GetMySQLLastDocuments scan: sql: Scan error on column index 1, name "documentID": converting NULL to string is unsupported
+022-08-11 06:27:07.607: Error in GetMySQLLastDocuments scan: sql: Scan error on column index 1, name "documentID": converting NULL to string is unsupported
+022-08-11 06:27:07.607: Error in GetMySQLLastDocuments scan: sql: Scan error on column index 1, name "documentID": converting NULL to string is unsupported
+022-08-11 06:27:07.607: Error in GetMySQLLastDocuments scan: sql: Scan error on column index 1, name "documentID": converting NULL to string is unsupported
+022-08-11 06:27:07.607: Error in GetMySQLLastDocuments scan: sql: Scan error on column index 1, name "documentID": converting NULL to string is unsupported
+022-08-11 06:27:07.608: Connected to database: cda
+022-08-11 06:27:31.124: Connected to database: cda
+022-08-11 06:27:31.124: Error in GetMySQLLastDocuments scan: sql: Scan error on column index 8, name "description": converting NULL to string is unsupported
+022-08-11 06:27:31.125: Error in GetMySQLLastDocuments scan: sql: Scan error on column index 1, name "documentID": converting NULL to string is unsupported
+022-08-11 06:27:31.125: Error in GetMySQLLastDocuments scan: sql: Scan error on column index 1, name "documentID": converting NULL to string is unsupported
+022-08-11 06:27:31.125: Error in GetMySQLLastDocuments scan: sql: Scan error on column index 1, name "documentID": converting NULL to string is unsupported
+022-08-11 06:27:31.125: Error in GetMySQLLastDocuments scan: sql: Scan error on column index 1, name "documentID": converting NULL to string is unsupported
+022-08-11 06:27:31.125: Error in GetMySQLLastDocuments scan: sql: Scan error on column index 1, name "documentID": converting NULL to string is unsupported
+022-08-11 06:27:31.125: Connected to database: cda
+022-08-11 06:27:37.736: Connected to database: cda
+022-08-11 06:27:37.736: Error in GetMySQLLastDocuments scan: sql: Scan error on column index 8, name "description": converting NULL to string is unsupported
+022-08-11 06:27:37.737: Error in GetMySQLLastDocuments scan: sql: Scan error on column index 1, name "documentID": converting NULL to string is unsupported
+022-08-11 06:27:37.737: Error in GetMySQLLastDocuments scan: sql: Scan error on column index 1, name "documentID": converting NULL to string is unsupported
+022-08-11 06:27:37.737: Error in GetMySQLLastDocuments scan: sql: Scan error on column index 1, name "documentID": converting NULL to string is unsupported
+022-08-11 06:27:37.737: Error in GetMySQLLastDocuments scan: sql: Scan error on column index 1, name "documentID": converting NULL to string is unsupported
+022-08-11 06:27:37.737: Error in GetMySQLLastDocuments scan: sql: Scan error on column index 1, name "documentID": converting NULL to string is unsupported
+022-08-11 06:27:37.738: Connected to database: cda

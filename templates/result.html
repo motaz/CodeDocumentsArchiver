@@ -1,0 +1,34 @@
+
+        <div class="container">
+            <div class="row">
+                <h1>  
+                    <a href="/upload">Home</a>
+                </h1>
+            </div>
+            <div class="row jumbotron">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Link</th>
+                            <th scope="col">Expiary Date</th>
+                            <th scope="col">Share Key</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Copy Link<br/>
+                                <a target=_blank href='{{.Link}}'>{{.Link}}</a>
+                            </td>                    
+                            <td>{{.Expires}}</td>
+                            <td>{{.ShareKey}}</td>
+                        </tr>
+                         
+                    </tbody>
+                </table>
+           </div>
+        </div>
+		<div>
+{{ template "footer"  }}

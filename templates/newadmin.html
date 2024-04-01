@@ -1,0 +1,14 @@
+{{ template "header"  }}
+
+<div class='well'>
+<h3>Code Documents Archiver</h3>
+<font color=blue><h4>Add new Admin user for domain: {{.Domain}}</h4></font>
+<form method=POST>
+<table><tr><td>Login</td><td><input type=text name=username id=login autofocus /> </td></tr>
+<tr><td>Password</td><td><input type=password name=password /> </td></tr>
+<tr><td>Password confirm</td><td><input type=password name=passwordconfirm /> </td></tr>
+
+<tr><td><input type=submit name=addadmin value=Add class=button /></td></tr></table>
+</form></div>
+
+{{ template "footer"  }}

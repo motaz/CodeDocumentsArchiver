@@ -1,0 +1,108 @@
+{{ template "header"  }}
+
+{{ template "subheader" .Header }}
+
+        <div class="well" style="padding:30px;">
+        <table width=80%>
+        <tr>
+        <td>
+        <div>
+        <form  action="/cda/document?id={{.ID}}" method="post" >
+        <input type=hidden name="documentid" value="{{.ID}}" />
+       
+                <h3>Update Document Info</h3>
+                <div>
+                <p id="{{.Class}}">
+                {{.Message}}
+                </p>
+                {{ if .Removed}}
+                <font color=red>This document is temporary removed</font>
+                {{end}}
+                <p>ID <input type="text"  name="id" value="{{.ID}}" readonly></p>
+                <p>Desc. <b><font color="green">{{.Description}}</font></b></p>
+                        <p>File <a href="/cda/download?id={{.ID}}" target="_blank"> {{.FileName}}</a></p>
+                  <p>Document Date: <b> {{.DocumentDate}}</b></p>
+                    <p>Insertion time: {{.InsertionTime.Format "2006-Jan-02 15:04"}}<br/>
+                    Updated time: {{.UpdatedTime.Format "2006-Jan-02 15:04"}}</p>
+                    <p>Section:<b> {{.SectionName}}</b></p>
+                    <p>User: <b>{{.DocUsername}}</b></p>
+                  <hr>
+                  <h4><font color=blue>Update Information</font></h4>
+                  
+                       Section {{ template "selectsection" .Box }}
+
+                        <br/>
+                        Document Date
+                        <input type="date" name="documentdate" value="{{.DocumentDate}}" />
+                        <br/>
+                        Description<br/>
+                        <textarea name=description cols=40 rows=7 >{{.Description}}</textarea>
+                        
+                        <br/>
+ 
+                        <input type="submit" name="updateinfo"  value="Update Info" 
+                               class="btn btn-lg btn-primary align-right" />
+         
+                </div>
+                <div>
+                {{ if .Removed}}
+                                  <input type="submit" name="restore"  value="Restore Document" 
+                               class="button3" />
+                {{else}}
+                     {{ if .ShowEdit}}
+
+                       <input type="submit" name="remove"  value="Remove Document" 
+                               class="button2" />
+                    {{end}}
+
+                {{end}}
+                </div>
+            </form>
+            </div>
+        </td>
+            
+        <td> 
+        <div> <h3>Update Attachment</h3>  
+          <form enctype="multipart/form-data" action="/cda/document?id={{.ID}}" method="post" >
+        <input type=hidden name="documentid" value="{{.ID}}" />
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="file"><h4>Document Upload</h4>
+                        </label>
+                        <input class="btn btn-default" type="file" name="uploadfile"
+                         placeholder='Choose'> 
+             <p><input type=checkbox name="newrevision" value="1">&emsp;New Revision</p>
+                        <input type="submit" name="uploaddodument"  value="Upload Document" 
+                               class="btn btn-lg btn-primary align-right" />
+                    </div>
+                </div>
+               
+            </form>
+            </div>
+         </td>
+
+        </tr></table>
+        <div>
+          <h3>Document History</h3>
+          <table class=tform width=80%>
+          <tr><th>Revision</th><th>Time</th><th>File</th><th>User</th><th>Event</th></tr>
+            {{ range .History }}
+            <tr>
+             <td><a href="/cda/download?id={{.RevisionID}}" target="_blank"> {{.RevisionID}}</a></td>
+              <td>{{.EventTime.Format "2006-Jan-02 15:04"}}</td>
+              <td><a href="/cda/download?id={{.RevisionID}}" target="_blank">
+                 {{.Filename}}</a></td>
+              <td>{{.UserName}}</td>
+              <td>{{.Event}}</td>
+            </tr>
+            {{end}}
+          </table>
+        </div>
+      </div>
+    
+    </div>
+{{ template "footer"  }}
+        
+           
+    
