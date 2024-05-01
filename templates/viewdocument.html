@@ -26,6 +26,7 @@
                     Updated time: {{.UpdatedTime.Format "2006-Jan-02 15:04"}}</p>
                     <p>Section:<b> {{.SectionName}}</b></p>
                     <p>User: <b>{{.DocUsername}}</b></p>
+                    <p>MD5 CheckSum: <b>{{.FileMD5}}</b></p>
                   <hr>
                   <h4><font color=blue>Update Information</font></h4>
                   
@@ -86,13 +87,17 @@
         <div>
           <h3>Document History</h3>
           <table class=tform width=80%>
-          <tr><th>Revision</th><th>Time</th><th>File</th><th>User</th><th>Event</th></tr>
+          <tr>
+             <th>Revision</th><th>Time</th><th>File</th><th>MD5</th>
+             <th>User</th><th>Event</th>
+          </tr>
             {{ range .History }}
             <tr>
              <td><a href="/cda/download?id={{.RevisionID}}" target="_blank"> {{.RevisionID}}</a></td>
               <td>{{.EventTime.Format "2006-Jan-02 15:04"}}</td>
               <td><a href="/cda/download?id={{.RevisionID}}" target="_blank">
                  {{.Filename}}</a></td>
+              <td>{{.FileMD5}}</td>
               <td>{{.UserName}}</td>
               <td>{{.Event}}</td>
             </tr>

@@ -245,6 +245,7 @@ type ViewDocumentType struct {
 	ShowEdit      bool
 	Message       string
 	Class         string
+	FileMD5       string
 	History       []archiverdata.HistoryType
 }
 
@@ -324,6 +325,10 @@ func ViewDocument(w http.ResponseWriter, req *http.Request) {
 				docForm.DocUsername = controller.GetUserByID(domain, doc.UserID).UserName
 				docForm.InsertionTime = doc.InsertionTime
 				docForm.UpdatedTime = doc.UpdatedTime
+
+				if len(docForm.History) > 0 {
+					docForm.FileMD5 = docForm.History[0].FileMD5
+				}
 
 				docForm.Box.Sections, err = controller.GetDocumentTypes(domain)
 				docForm.Box.SelectedID = doc.SectionID

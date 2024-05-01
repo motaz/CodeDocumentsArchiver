@@ -571,6 +571,7 @@ type HistoryType struct {
 	Filename   string
 	Year       string
 	Event      string
+	FileMD5    string
 }
 
 func readHistoryRecord(databasename string, rows *sql.Rows) (record HistoryType, err error) {
@@ -583,9 +584,9 @@ func readHistoryRecord(databasename string, rows *sql.Rows) (record HistoryType,
 		record.EventTime = strToTime(eventTimeStr)
 		userInfo, _ := GetUserByid(databasename, record.UserID)
 		record.UserName = userInfo.UserName
-		var fileMD5 string
-		record.Filename, fileMD5, _ = GetAttachmentInfo(databasename, record.Year, record.RevisionID)
-		fmt.Println(fileMD5)
+
+		record.Filename, record.FileMD5, _ = GetAttachmentInfo(databasename, record.Year, record.RevisionID)
+
 	} else {
 		writeLog("Error in readHistoryRecord scan: " + err.Error())
 	}

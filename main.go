@@ -12,7 +12,7 @@ import (
 
 var mytemplate *template.Template
 
-const VERSION = "1.2.10 r1-Apr"
+const VERSION = "1.2.11 r1-May"
 
 //go:embed templates
 var templatesFS embed.FS
