@@ -8,11 +8,14 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"strings"
+
+	"github.com/motaz/codeutils"
 )
 
 var mytemplate *template.Template
 
-const VERSION = "1.2.11 r1-May"
+const VERSION = "1.2.12 r6-May"
 
 //go:embed templates
 var templatesFS embed.FS
@@ -51,10 +54,17 @@ func main() {
 
 			http.Handle("/cda/resources/", http.StripPrefix("/cda/", http.FileServer(http.FS(static))))
 
-			fmt.Println("Code Documents Archiver, Listening on port 10032")
-			fmt.Println("http://localhost:10032")
+			listen := codeutils.GetConfigWithDefault("config.ini", "listen", ":10032")
+			if listen == "" {
 
-			err = http.ListenAndServe(":10032", nil)
+			}
+			fmt.Println("Code Documents Archiver, Listening on")
+			if !strings.Contains(listen, "localhost") {
+				fmt.Print("http://localhost")
+			}
+			fmt.Println(listen)
+
+			err = http.ListenAndServe(listen, nil)
 			if err != nil {
 				message := "Error while listening: " + err.Error()
 				fmt.Println(message)
