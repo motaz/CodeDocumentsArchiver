@@ -35,7 +35,12 @@
                         <br/>
                         Document Date
                         <input type="date" name="documentdate" value="{{.DocumentDate}}" />
-                        <br/>
+                        &emsp;
+                        <input type=checkbox name="ispublic" value="1"
+                        {{ if .Info.IsPublic}}
+                        checked
+                        {{end}}
+                        > Is Public </br>
                         Description<br/>
                         <textarea name=description cols=40 rows=7 >{{.Description}}</textarea>
                         

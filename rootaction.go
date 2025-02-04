@@ -209,16 +209,20 @@ func NewAdminUser(w http.ResponseWriter, req *http.Request) {
 
 func DownloadAttachment(w http.ResponseWriter, req *http.Request) {
 
-	isValid, _ := checkSession(w, req)
-	if isValid {
-		revisionID := req.FormValue("id")
-		domain := services.GetDomain(req)
+	revisionID := req.FormValue("id")
+	domain := services.GetDomain(req)
 
-		closer, doc, err := controller.GetAttachment(domain, revisionID)
+	closer, doc, err := controller.GetAttachment(domain, revisionID)
 
-		if err != nil {
-			w.Write([]byte("Error: " + err.Error()))
-		} else {
+	if err != nil {
+		w.Write([]byte("Error: " + err.Error()))
+	} else {
+		allowed := doc.Info.IsPublic
+		fmt.Println("Allowed: ", allowed)
+		if !allowed {
+			allowed, _ = checkSession(w, req)
+		}
+		if allowed {
 			w.Header().Set("Content-Disposition", "filename="+doc.FileName+";")
 			_, err = io.Copy(w, closer)
 
@@ -226,8 +230,8 @@ func DownloadAttachment(w http.ResponseWriter, req *http.Request) {
 				w.Write([]byte("Error copying file: " + err.Error()))
 			}
 		}
-
 	}
+
 }
 
 type ViewDocumentType struct {
@@ -247,6 +251,7 @@ type ViewDocumentType struct {
 	Class         string
 	FileMD5       string
 	History       []archiverdata.HistoryType
+	Info          archiverdata.DocumentInfoType
 }
 
 func doUpateInfo(userID int, w http.ResponseWriter, req *http.Request) (message, class string) {
@@ -258,6 +263,8 @@ func doUpateInfo(userID int, w http.ResponseWriter, req *http.Request) (message,
 		doc.DocumentDate, _ = time.Parse("2006-01-02", req.FormValue("documentdate"))
 
 		doc.SectionID, _ = strconv.Atoi(req.FormValue("sectionid"))
+		doc.Info.IsPublic = req.FormValue("ispublic") == "1"
+
 		domain := services.GetDomain(req)
 		_, err = controller.ModifyDocumentInfo(domain, doc, userID)
 
@@ -325,7 +332,7 @@ func ViewDocument(w http.ResponseWriter, req *http.Request) {
 				docForm.DocUsername = controller.GetUserByID(domain, doc.UserID).UserName
 				docForm.InsertionTime = doc.InsertionTime
 				docForm.UpdatedTime = doc.UpdatedTime
-
+				docForm.Info = doc.Info
 				if len(docForm.History) > 0 {
 					docForm.FileMD5 = docForm.History[0].FileMD5
 				}

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/md5"
 	"database/sql"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -17,7 +18,7 @@ import (
 )
 
 const SELECT_FROM_DOCUMENTS = `SELECT id, revisionID, filename, insertionTime, 
-		documentDate, updatedTime, userID, sectionID, year, description, isRemoved FROM  `
+		documentDate, updatedTime, userID, sectionID, year, description, isRemoved , Info FROM  `
 
 var dbconn *sql.DB
 
@@ -138,20 +139,19 @@ func timeToStr(atime time.Time) (result string) {
 	return
 }
 
-func InsertDocumentInfo(databasename string, doc *DocumentType) (id int64, err error) {
+func InsertDocumentInfo(databasename string, doc *DocumentType, info DocumentInfoType) (id int64, err error) {
 
 	id = 0
-
+	infoJson, _ := json.Marshal(info)
 	st := `INSERT INTO ` + databasename + `.documents (revisionID, filename, year,
 		   insertionTime, documentDate, updatedTime, userID, sectionID,
-	       isRemoved, Description) values (?, ?, ?, now(), ?, now(), ?, ?, 0, ?)`
+	       isRemoved, Description, info) values (?, ?, ?, now(), ?, now(), ?, ?, 0, ?, ?)`
 	doc.RevisionID = GetNewRevisionID(databasename)
-	fmt.Printf("%+v\n", doc)
 
 	var result sql.Result
 
 	result, err = dbconn.Exec(st, doc.RevisionID, doc.FileName, doc.Year,
-		doc.DocumentDate, doc.UserID, doc.SectionID, doc.Description)
+		doc.DocumentDate, doc.UserID, doc.SectionID, doc.Description, infoJson)
 
 	if err == nil {
 		id, _ = result.LastInsertId()
@@ -163,15 +163,14 @@ func InsertDocumentInfo(databasename string, doc *DocumentType) (id int64, err e
 	return
 }
 
-func ImportDocumentInfo(databasename string, doc *DocumentType) (id int64, err error) {
+func ImportDocumentInfo(databasename string, doc *DocumentType, info DocumentInfoType) (id int64, err error) {
 
 	id = 0
+	infoJson, _ := json.Marshal(info)
 
 	st := `INSERT INTO ` + databasename + `.documents (revisionID, filename, year,
 		   insertionTime, documentDate, updatedTime, userID, sectionID,
-	       isRemoved, Description) values (?, ?, ?, ?, ?, ?, ?, ?, 0, ?)`
-
-	fmt.Printf("%+v\n", doc)
+	       isRemoved, Description, info) values (?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)`
 
 	insertTime := timeToStr(doc.InsertionTime)
 	updatedTime := timeToStr(doc.InsertionTime)
@@ -180,7 +179,7 @@ func ImportDocumentInfo(databasename string, doc *DocumentType) (id int64, err e
 
 	result, err = dbconn.Exec(st, doc.RevisionID, doc.FileName, doc.Year,
 		insertTime, documentDate, updatedTime,
-		doc.UserID, doc.SectionID, doc.Description)
+		doc.UserID, doc.SectionID, doc.Description, infoJson)
 
 	if err == nil {
 		id, _ = result.LastInsertId()
@@ -231,17 +230,24 @@ type DocumentType struct {
 	ShowEdit       bool
 	AttachmentSize int64
 	AttachmentRecordInputType
+	Info DocumentInfoType
+}
+
+type DocumentInfoType struct {
+	IsPublic bool
 }
 
 func readOneDocument(rows *sql.Rows) (doc DocumentType, err error) {
 
 	var updatedTimeSQL sql.NullString
 	var insertionTimeSQL sql.NullString
+	var infoSQL sql.NullString
 	var documentDateSql string
 	err = rows.Scan(&doc.ID, &doc.RevisionID, &doc.FileName, &insertionTimeSQL,
 		&documentDateSql, &updatedTimeSQL, &doc.UserID,
-		&doc.SectionID, &doc.Year, &doc.Description, &doc.Removed)
+		&doc.SectionID, &doc.Year, &doc.Description, &doc.Removed, &infoSQL)
 	doc.DocumentDate, _ = time.Parse(time.DateOnly, documentDateSql)
+
 	if insertionTimeSQL.Valid {
 		doc.InsertionTime = strToTime(insertionTimeSQL.String)
 	}
@@ -249,6 +255,11 @@ func readOneDocument(rows *sql.Rows) (doc DocumentType, err error) {
 		doc.UpdatedTime = strToTime(updatedTimeSQL.String)
 	} else {
 		doc.UpdatedTime = doc.InsertionTime
+	}
+
+	if infoSQL.Valid {
+		json.Unmarshal([]byte(infoSQL.String), &doc.Info)
+
 	}
 	return
 }
@@ -348,7 +359,7 @@ func GetAttachment(databasename, year, revisionID string) (closer io.ReadCloser,
 			createMD5Field(databasename + year)
 		}
 		writeLog("Error in GetAttachment: " + err.Error())
-		fmt.Println(stmt)
+
 	} else {
 
 		var buf []byte
@@ -450,10 +461,11 @@ func UpdateDocumentInfo(databasename string, doc DocumentType) (success bool, er
 
 	st := `update ` + databasename + `.documents set revisionID = ?, description =?, 
 	       documentDate = ?,  sectionID =?, year = ?, filename = ?, userID =?,
-		   updatedTime = now()
+		   updatedTime = now(), info = ?
 	       where ID = ?`
+	info, _ := json.Marshal(doc.Info)
 	_, err = dbconn.Exec(st, doc.RevisionID, doc.Description, doc.DocumentDate, doc.SectionID,
-		doc.Year, doc.FileName, doc.UserID, doc.ID)
+		doc.Year, doc.FileName, doc.UserID, info, doc.ID)
 	success = err == nil
 	if !success {
 		writeLog("Error in UpdateDocumentInfo: " + err.Error())

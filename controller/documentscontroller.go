@@ -4,7 +4,7 @@ import (
 	"CodeDocumentsArchiver/archiverdata"
 	"bufio"
 	"bytes"
-	"fmt"
+
 	"strings"
 	"time"
 
@@ -70,7 +70,7 @@ func RetreiveLastDocuments(domain string, page int) (documents []archiverdata.Do
 }
 
 func InsertNewAttachment(domain string, theDoc archiverdata.DocumentType,
-	filename string, file *bufio.Reader, autoInsertionTime bool) (docID int64, err error) {
+	filename string, file *bufio.Reader, autoInsertionTime bool, info archiverdata.DocumentInfoType) (docID int64, err error) {
 
 	buf := bytes.NewBuffer(nil)
 
@@ -81,9 +81,9 @@ func InsertNewAttachment(domain string, theDoc archiverdata.DocumentType,
 		databasename := archiverdata.GetDatabaseNameFromDomain(domain)
 		theDoc.Year = GetCurrentYear()
 		if autoInsertionTime {
-			docID, err = archiverdata.InsertDocumentInfo(databasename, &theDoc)
+			docID, err = archiverdata.InsertDocumentInfo(databasename, &theDoc, info)
 		} else {
-			docID, err = archiverdata.ImportDocumentInfo(databasename, &theDoc)
+			docID, err = archiverdata.ImportDocumentInfo(databasename, &theDoc, info)
 
 		}
 		if err == nil {
@@ -102,14 +102,13 @@ func GetAttachment(domain string, revisionID string) (closer io.ReadCloser, doc 
 	databasename := archiverdata.GetDatabaseNameFromDomain(domain)
 	doc, err = archiverdata.GetDocumentByRevisionID(databasename, revisionID)
 	if err == nil {
-		closer, doc, err = archiverdata.GetAttachment(databasename, doc.Year, doc.RevisionID)
+		closer, _, err = archiverdata.GetAttachment(databasename, doc.Year, doc.RevisionID)
 	} else {
 		if strings.Contains(err.Error(), "not found") {
 			var record archiverdata.HistoryType
 			record, err = archiverdata.GetHistoryRecord(databasename, revisionID)
 			if err == nil {
-				fmt.Printf("%+v\n", record)
-				closer, doc, err = archiverdata.GetAttachment(databasename, record.Year, record.RevisionID)
+				closer, _, err = archiverdata.GetAttachment(databasename, record.Year, record.RevisionID)
 			}
 		}
 

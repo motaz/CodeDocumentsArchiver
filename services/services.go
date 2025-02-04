@@ -66,7 +66,7 @@ func UploadAttachment(w http.ResponseWriter, req *http.Request) {
 	json.Unmarshal(body, &uploadinput)
 	domain := uploadinput.Domain
 	databasename := archiverdata.GetDatabaseNameFromDomain(domain)
-	fmt.Println(databasename)
+
 	authDomain := ""
 	if strings.Contains(uploadinput.Username, "/") {
 		authDomain = uploadinput.Username[:strings.Index(uploadinput.Username, "/")-1]
@@ -88,6 +88,8 @@ func UploadAttachment(w http.ResponseWriter, req *http.Request) {
 				bR := bytes.NewReader(sDec)
 				r := bufio.NewReader(bR)
 				var doc archiverdata.DocumentType
+				var info archiverdata.DocumentInfoType
+
 				doc.Description = uploadinput.Title
 				doc.UserID = user.UserID
 				doc.FileName = uploadinput.FileName
@@ -96,9 +98,10 @@ func UploadAttachment(w http.ResponseWriter, req *http.Request) {
 				if len(uploadinput.Contents) < 100 {
 					resultMessage.Message = "Empty attachment"
 				} else {
+					info.IsPublic = false
 
 					_, err := controller.InsertNewAttachment(domain, doc, uploadinput.FileName,
-						r, true)
+						r, true, info)
 					if err != nil {
 						setError(&resultMessage, http.StatusInternalServerError, err.Error())
 					} else {

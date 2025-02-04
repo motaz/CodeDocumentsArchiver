@@ -39,6 +39,9 @@ func upload(w http.ResponseWriter, r *http.Request, form *UploadFormType, userID
 		filer := bufio.NewReader(file)
 
 		var fileInfo archiverdata.DocumentType
+		var info archiverdata.DocumentInfoType
+
+		info.IsPublic = r.FormValue("ispublic") == "1"
 		fileInfo.Description = r.FormValue("description")
 		fileInfo.FileName = archiverdata.GetOnlyFile(handler.Filename)
 		fileInfo.InsertionTime = time.Now()
@@ -51,7 +54,7 @@ func upload(w http.ResponseWriter, r *http.Request, form *UploadFormType, userID
 			fileInfo.Type = "document"
 			fileInfo.UserID = userID
 			domain := services.GetDomain(r)
-			_, err = controller.InsertNewAttachment(domain, fileInfo, fileInfo.FileName, filer, true)
+			_, err = controller.InsertNewAttachment(domain, fileInfo, fileInfo.FileName, filer, true, info)
 			if err == nil {
 				form.Class = "infomessage"
 				form.Message = "File: " + fileInfo.FileName + " Has uploaded"

@@ -37,7 +37,7 @@ Filter section Section {{ template "selectsection" .Box }}
 <table class=tform >
 <tr><th>ID</th><th>Description</th><th>File</th><th>Section</td>
 <th>Document Date</th><th>Insertion time</th><th>Updated time</th>
-<th>User</th></tr>
+<th>User</th><th>Pubic</th></tr>
 {{ range .Documents }}
 
 <tr>
@@ -62,6 +62,11 @@ Filter section Section {{ template "selectsection" .Box }}
   {{end}}
  >{{.UpdatedTime.Format "2006-Jan-02 15:04"}}</td>
  <td>{{.UserName}}</td>
+<td>
+{{ if .Info.IsPublic}}
+  Yes
+{{end}}
+</td>
 {{ if .Removed }}
 <td><font color=red>Removed</font></td>
 {{end}}
@@ -81,6 +86,7 @@ Filter section Section {{ template "selectsection" .Box }}
                    
       Document Date
       <input type="date" name="documentdate" value="{{.Today}}" />
+      <input type="checkbox" name="ispublic" value ="1" /> Is Public 
         
       <br/>Description
       <input name=description value="{{.Key}}" size=70 id="description" />
@@ -88,8 +94,7 @@ Filter section Section {{ template "selectsection" .Box }}
       <br/>
  
       <input type="submit" name="upload"  value="Upload Document" 
-           class="btn btn-lg btn-primary align-right" />
-                                                                                                   
+           class="btn btn-lg btn-primary align-right" />                                                                                                
 
   </div>
           
