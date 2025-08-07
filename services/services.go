@@ -7,12 +7,14 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
+
 	"time"
 
 	"io/ioutil"
 	"net/http"
 	"strings"
+
+	"github.com/motaz/codeutils"
 )
 
 type UploadInputType struct {
@@ -97,6 +99,10 @@ func UploadAttachment(w http.ResponseWriter, req *http.Request) {
 				doc.DocumentDate = time.Now()
 				if len(uploadinput.Contents) < 100 {
 					resultMessage.Message = "Empty attachment"
+				} else if len(uploadinput.Contents) < 1024 {
+					resultMessage.Message = "Ignoring small attachments"
+					resultMessage.Success = true
+
 				} else {
 					info.IsPublic = false
 
@@ -126,9 +132,16 @@ func UploadAttachment(w http.ResponseWriter, req *http.Request) {
 	} else {
 		setError(&resultMessage, http.StatusBadRequest, "Empty data")
 	}
+	writeResult(w, resultMessage)
+	codeutils.WriteToLog("Email attachment: "+resultMessage.Message, "cda")
+
+}
+
+func writeResult(w http.ResponseWriter, resultMessage ResultMessage) {
+
 	data, _ := json.Marshal(resultMessage)
 	w.WriteHeader(resultMessage.Status)
 
 	w.Write(data)
-	fmt.Printf("%+v", resultMessage)
+
 }

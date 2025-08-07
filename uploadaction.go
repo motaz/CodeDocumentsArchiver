@@ -123,12 +123,12 @@ func reUpload(w http.ResponseWriter, r *http.Request, userID int) (revisionID, m
 			}
 			if !newRevision {
 				_, doc, err := controller.GetAttachment(domain, id)
-				if err == nil && doc.AttachmentSize > 0 {
-					dif := (size - doc.AttachmentSize) * 100 / doc.AttachmentSize
+				if err == nil && doc.Info.FileSize > 0 {
+					dif := (size - doc.Info.FileSize) * 100 / doc.Info.FileSize
 					delta := math.Abs(float64(dif))
 
 					newRevision = delta > 20
-					fmt.Println(doc.AttachmentSize, size, delta, newRevision)
+					fmt.Println(doc.Info.FileSize, size, delta, newRevision)
 
 				}
 			}

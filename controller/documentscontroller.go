@@ -5,6 +5,8 @@ import (
 	"bufio"
 	"bytes"
 
+	"github.com/motaz/codeutils"
+
 	"strings"
 	"time"
 
@@ -61,6 +63,14 @@ func RetreiveLastDocuments(domain string, page int) (documents []archiverdata.Do
 	if err == nil {
 		for _, item := range lastDocuments {
 			if !item.Removed {
+				if item.Info.FileSize == 0 {
+					_, doc, err := archiverdata.GetAttachment(databasename, item.Year, item.RevisionID)
+					if err == nil {
+						item.Info.FileSize = doc.Info.FileSize
+						archiverdata.UpdateAttachmentExtraInfo(databasename, item.ID, item.Info)
+					}
+				}
+				item.FileSizeStr = codeutils.FormatBytes(item.Info.FileSize)
 				documents = append(documents, item)
 			}
 		}
@@ -89,6 +99,8 @@ func InsertNewAttachment(domain string, theDoc archiverdata.DocumentType,
 		if err == nil {
 			_, err = archiverdata.InsertAttachement(databasename, theDoc.Year, docID, theDoc.RevisionID, filename, buf)
 			if err == nil {
+				theDoc.Info.FileSize = int64(len(buf.Bytes()))
+				archiverdata.UpdateAttachmentExtraInfo(databasename, theDoc.ID, theDoc.Info)
 				archiverdata.InsertHistory(databasename, theDoc.Year, theDoc.RevisionID, "new", docID, theDoc.UserID)
 			}
 		}
@@ -102,7 +114,14 @@ func GetAttachment(domain string, revisionID string) (closer io.ReadCloser, doc 
 	databasename := archiverdata.GetDatabaseNameFromDomain(domain)
 	doc, err = archiverdata.GetDocumentByRevisionID(databasename, revisionID)
 	if err == nil {
-		closer, _, err = archiverdata.GetAttachment(databasename, doc.Year, doc.RevisionID)
+		var docTmp archiverdata.DocumentType
+		closer, docTmp, err = archiverdata.GetAttachment(databasename, doc.Year, doc.RevisionID)
+		if doc.Info.FileSize == 0 {
+			doc.Info.FileSize = docTmp.Info.FileSize
+			if doc.Info.FileSize > 0 {
+				archiverdata.UpdateAttachmentExtraInfo(databasename, doc.ID, doc.Info)
+			}
+		}
 	} else {
 		if strings.Contains(err.Error(), "not found") {
 			var record archiverdata.HistoryType
@@ -163,6 +182,9 @@ func ModifyAttachment(domain string, theDoc *archiverdata.DocumentType,
 		}
 	}
 	if success {
+		theDoc.Info.FileSize = int64(len(buf.Bytes()))
+		archiverdata.UpdateAttachmentExtraInfo(databasename, theDoc.ID, theDoc.Info)
+
 		archiverdata.InsertHistory(databasename, year, theDoc.RevisionID, event,
 			theDoc.ID, theDoc.UserID)
 	}

@@ -211,6 +211,7 @@ func InsertAttachement(databasename, year string, docID int64, revisionID, filen
 
 	if err == nil {
 		fileMD5 := GetFileMD5(buf.Bytes())
+
 		st := `INSERT INTO ` + attachmentdatabase + `.documents (docID, revisionID, 
 		      filename, FileType, md5, Content, insertionTime) values (?, ?, ?, ?, ?, ?, now())`
 		_, err = dbconn.Exec(st, docID, revisionID, filename, fileType, fileMD5, buf.Bytes())
@@ -225,16 +226,17 @@ func InsertAttachement(databasename, year string, docID int64, revisionID, filen
 }
 
 type DocumentType struct {
-	ID             int64
-	RevisionID     string
-	ShowEdit       bool
-	AttachmentSize int64
+	ID          int64
+	RevisionID  string
+	ShowEdit    bool
+	FileSizeStr string
 	AttachmentRecordInputType
 	Info DocumentInfoType
 }
 
 type DocumentInfoType struct {
 	IsPublic bool
+	FileSize int64
 }
 
 func readOneDocument(rows *sql.Rows) (doc DocumentType, err error) {
@@ -261,6 +263,10 @@ func readOneDocument(rows *sql.Rows) (doc DocumentType, err error) {
 		json.Unmarshal([]byte(infoSQL.String), &doc.Info)
 
 	}
+	if doc.Info.FileSize > 0 {
+		doc.FileSizeStr = codeutils.FormatBytes(doc.Info.FileSize)
+	}
+
 	return
 }
 
@@ -318,7 +324,8 @@ func GetAllDocuments(databasename string) (docs []DocumentType, err error) {
 func GetDocumentByRevisionID(databasename, revisionID string) (doc DocumentType, err error) {
 
 	stmt := SELECT_FROM_DOCUMENTS + databasename + `.documents 
-	        where revisionID  = ?`
+	        			where revisionID  = ?`
+
 	var rows *sql.Rows
 	rows, err = dbconn.Query(stmt, revisionID)
 	if err != nil {
@@ -369,7 +376,7 @@ func GetAttachment(databasename, year, revisionID string) (closer io.ReadCloser,
 			doc.FileMD5 = fileMD5.String
 		}
 		closer = ioutil.NopCloser(bytes.NewReader(buf))
-		doc.AttachmentSize = int64(len(buf))
+		doc.Info.FileSize = int64(len(buf))
 		if doc.FileMD5 == "" {
 			doc.FileMD5 = GetFileMD5(buf)
 			UpdateAttachmentFileMD5(databasename, revisionID, year, doc.FileMD5)
@@ -521,6 +528,22 @@ func UpdateAttachmentFileMD5(databasename string, revisionID, year, fileMD5 stri
 	success = err == nil
 	if !success {
 		writeLog("Error in UpdateAttachmentFileMD5: " + err.Error())
+	}
+
+	return
+}
+
+func UpdateAttachmentExtraInfo(databasename string, docID int64, Info DocumentInfoType) (success bool, err error) {
+
+	infoData, _ := json.Marshal(Info)
+
+	st := `update ` + databasename + `.documents set Info = ?
+		 	   where ID = ?`
+	fmt.Println("Updating info for: ", docID)
+	_, err = dbconn.Exec(st, infoData, docID)
+	success = err == nil
+	if !success {
+		writeLog("Error in UpdateAttachmentExtraInfo: " + err.Error())
 	}
 
 	return

@@ -5,6 +5,8 @@ import (
 	"CodeDocumentsArchiver/controller"
 	"CodeDocumentsArchiver/services"
 
+	"github.com/motaz/codeutils"
+
 	"fmt"
 	"io"
 	"net/http"
@@ -218,7 +220,6 @@ func DownloadAttachment(w http.ResponseWriter, req *http.Request) {
 		w.Write([]byte("Error: " + err.Error()))
 	} else {
 		allowed := doc.Info.IsPublic
-		fmt.Println("Allowed: ", allowed)
 		if !allowed {
 			allowed, _ = checkSession(w, req)
 		}
@@ -252,6 +253,7 @@ type ViewDocumentType struct {
 	FileMD5       string
 	History       []archiverdata.HistoryType
 	Info          archiverdata.DocumentInfoType
+	FileSize      string
 }
 
 func doUpateInfo(userID int, w http.ResponseWriter, req *http.Request) (message, class string) {
@@ -294,6 +296,8 @@ func ViewDocument(w http.ResponseWriter, req *http.Request) {
 		docForm.Header.Title = getConfigurationParameter(domain, "title")
 
 		doc, err := controller.GetDocumentByRevisionID(domain, revisionID)
+		fmt.Printf("doc: %+v\n", doc)
+		fmt.Println("IsPublic: ", doc.Info.IsPublic, doc.Info.FileSize)
 		if err != nil {
 			fmt.Fprintf(w, "Error %v", err.Error())
 		} else {
@@ -341,6 +345,8 @@ func ViewDocument(w http.ResponseWriter, req *http.Request) {
 				docForm.Box.SelectedID = doc.SectionID
 				docForm.SectionName = controller.GetSectionName(domain, doc.SectionID)
 				docForm.Removed = doc.Removed
+
+				docForm.FileSize = codeutils.FormatBytes(doc.Info.FileSize)
 
 				err := mytemplate.ExecuteTemplate(w, "viewdocument.html", docForm)
 

@@ -35,7 +35,7 @@ Filter section Section {{ template "selectsection" .Box }}
 </a>
 </p>
 <table class=tform >
-<tr><th>ID</th><th>Description</th><th>File</th><th>Section</td>
+<tr><th>ID</th><th>Description</th><th>File</th><th>Size</th><th>Section</td>
 <th>Document Date</th><th>Insertion time</th><th>Updated time</th>
 <th>User</th><th>Pubic</th></tr>
 {{ range .Documents }}
@@ -49,6 +49,7 @@ Filter section Section {{ template "selectsection" .Box }}
 </td>
  <td>{{.Description}}</td>
  <td><a href="/cda/download?id={{.RevisionID}}" target="_blank">{{.FileName}}</a></td>
+ <td>{{.FileSizeStr}}</td>
  <td>{{.SectionName}}</td>
  <td>{{.DocumentDate.Format "2006-Jan-02"}}</td>
  <td>{{.InsertionTime.Format "2006-Jan-02 15:04"}}
