@@ -64,6 +64,7 @@ func RetreiveLastDocuments(domain string, page int) (documents []archiverdata.Do
 		for _, item := range lastDocuments {
 			if !item.Removed {
 				if item.Info.FileSize == 0 {
+
 					_, doc, err := archiverdata.GetAttachment(databasename, item.Year, item.RevisionID)
 					if err == nil {
 						item.Info.FileSize = doc.Info.FileSize
@@ -171,7 +172,7 @@ func ModifyAttachment(domain string, theDoc *archiverdata.DocumentType,
 		event = "updatefile"
 	} else {
 
-		theDoc.RevisionID = archiverdata.GetNewRevisionID(databasename)
+		theDoc.RevisionID = archiverdata.GetNewRevisionID(databasename, theDoc.FileName)
 		success, err = archiverdata.InsertAttachement(databasename, year, theDoc.ID,
 			theDoc.RevisionID, theDoc.FileName, buf)
 		if success {

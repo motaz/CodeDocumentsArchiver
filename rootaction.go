@@ -296,8 +296,7 @@ func ViewDocument(w http.ResponseWriter, req *http.Request) {
 		docForm.Header.Title = getConfigurationParameter(domain, "title")
 
 		doc, err := controller.GetDocumentByRevisionID(domain, revisionID)
-		fmt.Printf("doc: %+v\n", doc)
-		fmt.Println("IsPublic: ", doc.Info.IsPublic, doc.Info.FileSize)
+
 		if err != nil {
 			fmt.Fprintf(w, "Error %v", err.Error())
 		} else {

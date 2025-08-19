@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+
 	"strings"
 	"time"
 
@@ -119,12 +120,45 @@ func createMD5Field(databasename string) (success bool, err error) {
 	return
 }
 
-func GetNewRevisionID(databasename string) (revisionID string) {
+func getRandomLetters(count int) (letters string) {
 
-	revisionID = codeutils.GetMD5(time.Now().String())[:20]
+	for i := 0; i < count; i++ {
+		num := codeutils.GetRandom(26)
+		letters += string(byte(num) + 97)
+	}
+	if strings.Contains(letters, "se") {
+		letters = getRandomLetters(count)
+	}
+	return
+}
+
+func generateRandomNum(count int) (num string) {
+
+	numValue := codeutils.GetRandom(1000)
+	num = fmt.Sprintf("%03d", numValue)
+	if strings.Contains(num, "8") && strings.Contains(num, "6") {
+		num = generateRandomNum(count)
+	}
+	return
+}
+
+func GenerateRevision(filename string) (revisionID string) {
+
+	if strings.TrimSpace(filename) == "" {
+		filename = "em"
+	}
+	revisionID = filename[:2] + time.Now().Format("06") + "-"
+	revisionID += getRandomLetters(3) + "-" + generateRandomNum(4)
+
+	return
+}
+
+func GetNewRevisionID(databasename, filename string) (revisionID string) {
+
+	revisionID = GenerateRevision(filename)
 	record, err := GetHistoryRecord(databasename, revisionID)
 	if err == nil && record.RevisionID != "" {
-		revisionID = GetNewRevisionID(databasename)
+		revisionID = GetNewRevisionID(databasename, filename)
 	}
 	return
 }
@@ -146,7 +180,7 @@ func InsertDocumentInfo(databasename string, doc *DocumentType, info DocumentInf
 	st := `INSERT INTO ` + databasename + `.documents (revisionID, filename, year,
 		   insertionTime, documentDate, updatedTime, userID, sectionID,
 	       isRemoved, Description, info) values (?, ?, ?, now(), ?, now(), ?, ?, 0, ?, ?)`
-	doc.RevisionID = GetNewRevisionID(databasename)
+	doc.RevisionID = GetNewRevisionID(databasename, doc.FileName)
 
 	var result sql.Result
 
@@ -539,7 +573,6 @@ func UpdateAttachmentExtraInfo(databasename string, docID int64, Info DocumentIn
 
 	st := `update ` + databasename + `.documents set Info = ?
 		 	   where ID = ?`
-	fmt.Println("Updating info for: ", docID)
 	_, err = dbconn.Exec(st, infoData, docID)
 	success = err == nil
 	if !success {

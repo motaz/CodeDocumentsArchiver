@@ -15,7 +15,7 @@ import (
 
 var mytemplate *template.Template
 
-const VERSION = "1.2.13 r6-Aug"
+const VERSION = "1.2.14 r19-Aug"
 
 //go:embed templates
 var templatesFS embed.FS

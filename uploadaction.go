@@ -6,7 +6,7 @@ import (
 	"CodeDocumentsArchiver/services"
 	"bufio"
 	"bytes"
-	"fmt"
+
 	"io"
 	"math"
 
@@ -128,7 +128,6 @@ func reUpload(w http.ResponseWriter, r *http.Request, userID int) (revisionID, m
 					delta := math.Abs(float64(dif))
 
 					newRevision = delta > 20
-					fmt.Println(doc.Info.FileSize, size, delta, newRevision)
 
 				}
 			}
