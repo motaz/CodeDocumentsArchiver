@@ -71,10 +71,9 @@ func Login(domain, authdomain, user, password, key string, storeSession, longSes
 	loginrequest.Key = key
 
 	jsonValue, _ := json.Marshal(loginrequest)
-	println(string(jsonValue))
 
 	resultStr, err := callCodeA(url+"CheckLogin", jsonValue)
-	println(string(resultStr))
+
 	if err == nil {
 		json.Unmarshal(resultStr, &result)
 		if result.Success {
