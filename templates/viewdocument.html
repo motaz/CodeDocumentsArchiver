@@ -18,9 +18,15 @@
                 {{ if .Removed}}
                 <font color=red>This document is temporary removed</font>
                 {{end}}
-                <p>ID <input type="text"  name="id" value="{{.ID}}" readonly></p>
+                <p>ID <input type="text"  name="id" value="{{.ID}}" readonly>
+                          <button style="font-size: small;" 
+                          onclick="navigator.clipboard.writeText(window.location.origin + '/cda/document?id={{.ID}}')">
+                            Copy Page Link</button></p>                
                 <p>Desc. <b><font color="green">{{.Description}}</font></b></p>
-                        <p>File <a href="/cda/download?id={{.ID}}" target="_blank"> {{.FileName}}</a></p>
+                        <p>File <a href="/cda/download?id={{.ID}}" target="_blank"> {{.FileName}}</a> 
+                          <button style="font-size: small;" 
+                          onclick="navigator.clipboard.writeText(window.location.origin + '/cda/download?id={{.ID}}')">
+                            Copy Link</button></p>
                   <p>Document Date: <b> {{.DocumentDate}}</b></p>
                     <p>Insertion time: {{.InsertionTime.Format "2006-Jan-02 15:04"}}<br/>
                     Updated time: {{.UpdatedTime.Format "2006-Jan-02 15:04"}}</p>
